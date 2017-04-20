@@ -49,6 +49,29 @@ module Wojxorfgax
     end
 
     describe 'GET #show' do
+      it 'returns 404' do
+        expect do
+          get '/items/12345', headers: { 'Authorization' => 'authorized_user' }
+        end.to raise_exception ActiveRecord::RecordNotFound
+      end
+
+      context 'with item' do
+        let!(:item) { create :wojxorfgax_item, user: user, audio_identifier: '01/01/01/blah' }
+
+        it 'returns item' do
+          get "/items/#{'01/01/01/blah'}", headers: { 'Authorization' => 'authorized_user' }
+          expect(response).to have_http_status(200)
+
+          json = JSON.parse response.body
+          expect(json['data'].size).to eq 1
+
+          first_item = json['data'].first
+          expect(first_item.keys).to eq %w(id type attributes)
+          expect(first_item['id']).to eq '01/01/01/blah'
+          expect(first_item['type']).to eq 'wojxorfgax-items'
+        end
+      end
+
       context 'with unauthorized user' do
         it 'returns error' do
           expect do

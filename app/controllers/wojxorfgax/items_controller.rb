@@ -8,7 +8,11 @@ module Wojxorfgax
       render json: current_user.items
     end
 
-    def show; end
+    def show
+      item = Item.find_by! audio_identifier: params[:id], user: current_user
+      render json: [item]
+    end
+
     def update; end
     def create; end
     def destroy; end

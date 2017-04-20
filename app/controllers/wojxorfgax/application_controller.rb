@@ -6,13 +6,15 @@ module Wojxorfgax
 
     before_action :authenticate_user
 
-    attr_reader :current_uid
+    attr_reader :current_user
 
     private
 
     def authenticate_user
-      @current_uid = Wojxorfgax.config.auth_plugin.fetch_uid(request)
-      raise InvalidAuth, 'Invalid auth' if @current_uid.nil?
+      current_uid = Wojxorfgax.config.auth_plugin.fetch_uid(request)
+      raise InvalidAuth, 'Invalid auth' if current_uid.nil?
+
+      @current_user = User.find_or_create_by external_uid: current_uid
     end
 
     class InvalidAuth < StandardError; end

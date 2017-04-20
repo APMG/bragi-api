@@ -24,6 +24,6 @@
 
 module Wojxorfgax
   class Item < ApplicationRecord
-    belongs_to :user
+    belongs_to :user, foreign_key: :wojxorfgax_user_id
   end
 end

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'active_model_serializers'
+
 module Wojxorfgax
   class Engine < ::Rails::Engine
     isolate_namespace Wojxorfgax
@@ -11,5 +13,7 @@ module Wojxorfgax
     end
 
     config.action_dispatch.rescue_responses['Wojxorfgax::ApplicationController::InvalidAuth'] = :forbidden
+
+    ActiveModelSerializers.config.adapter = :json_api
   end
 end

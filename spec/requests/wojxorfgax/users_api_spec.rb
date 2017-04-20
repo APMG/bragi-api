@@ -21,8 +21,9 @@ module Wojxorfgax
           expect(response).to have_http_status(200)
 
           json = JSON.parse response.body
-          expect(json['external_uid']).to eq '12345'
-          expect(json['secret_uid']).to eq 'MyString'
+          expect(json['data'][0]['id']).to eq '12345'
+          expect(json['data'][0].keys).to eq %w(id type attributes)
+          expect(json['data'][0]['type']).to eq 'wojxorfgax-users'
         end
       end
 
@@ -32,8 +33,9 @@ module Wojxorfgax
           expect(response).to have_http_status(200)
 
           json = JSON.parse response.body
-          expect(json['external_uid']).to eq '12345'
-          expect(json['secret_uid']).to be_nil
+          expect(json['data'][0]['id']).to eq '12345'
+          expect(json['data'][0].keys).to eq %w(id type attributes)
+          expect(json['data'][0]['type']).to eq 'wojxorfgax-users'
         end
       end
 

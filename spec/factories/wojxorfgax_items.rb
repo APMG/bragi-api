@@ -24,8 +24,8 @@
 
 FactoryGirl.define do
   factory :wojxorfgax_item, class: 'Wojxorfgax::Item' do
+    sequence(:audio_identifier) { |i| "01/01/01/blah#{i}" }
     sort 1.5
-    audio_identifier 'MyString'
     audio_url 'MyString'
     audio_title 'MyString'
     audio_description 'MyText'

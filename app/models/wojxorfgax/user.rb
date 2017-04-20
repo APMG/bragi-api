@@ -13,5 +13,6 @@
 
 module Wojxorfgax
   class User < ApplicationRecord
+    has_many :items, foreign_key: :wojxorfgax_user_id
   end
 end

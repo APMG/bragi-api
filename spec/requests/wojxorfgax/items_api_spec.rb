@@ -82,6 +82,9 @@ module Wojxorfgax
     end
 
     describe 'PATCH #update' do
+      it 'supports 404'
+      it 'supports update'
+
       context 'with unauthorized user' do
         it 'returns error' do
           expect do
@@ -92,6 +95,8 @@ module Wojxorfgax
     end
 
     describe 'POST #create' do
+      it 'supports creation'
+
       context 'with unauthorized user' do
         it 'returns error' do
           expect do
@@ -102,6 +107,9 @@ module Wojxorfgax
     end
 
     describe 'DELETE #destroy' do
+      it 'supports 404'
+      it 'supports deletion'
+
       context 'with unauthorized user' do
         it 'returns error' do
           expect do

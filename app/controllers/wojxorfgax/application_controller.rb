@@ -3,5 +3,18 @@
 module Wojxorfgax
   class ApplicationController < ActionController::API
     # protect_from_forgery with: :exception
+
+    before_action :authenticate_user
+
+    attr_reader :current_uid
+
+    private
+
+    def authenticate_user
+      @current_uid = Wojxorfgax.config.auth_plugin.fetch_uid(request)
+      raise InvalidAuth, 'Invalid auth' if @current_uid.nil?
+    end
+
+    class InvalidAuth < StandardError; end
   end
 end

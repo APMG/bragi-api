@@ -9,5 +9,7 @@ module Wojxorfgax
       g.test_framework :rspec
       g.fixture_replacement :factory_girl, dir: 'spec/factories'
     end
+
+    config.action_dispatch.rescue_responses['Wojxorfgax::ApplicationController::InvalidAuth'] = :forbidden
   end
 end

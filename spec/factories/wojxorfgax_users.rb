@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: wojxorfgax_users
@@ -11,7 +13,7 @@
 
 FactoryGirl.define do
   factory :wojxorfgax_user, class: 'Wojxorfgax::User' do
-    external_uid "MyString"
-    secret_uid "MyString"
+    external_uid 'MyString'
+    secret_uid 'MyString'
   end
 end

@@ -12,16 +12,29 @@ module Wojxorfgax
       end
     end
 
-    let!(:user) { create :wojxorfgax_user, external_uid: '12345' }
-
     describe 'GET #show' do
-      it 'returns http success' do
-        get '/user', headers: { 'Authorization' => 'authorized_user' }
-        expect(response).to have_http_status(200)
+      context 'with existing user' do
+        let!(:user) { create :wojxorfgax_user, external_uid: '12345' }
 
-        json = JSON.parse response.body
-        expect(json['external_uid']).to eq '12345'
-        expect(json['secret_uid']).to eq 'MyString'
+        it 'returns http success' do
+          get '/user', headers: { 'Authorization' => 'authorized_user' }
+          expect(response).to have_http_status(200)
+
+          json = JSON.parse response.body
+          expect(json['external_uid']).to eq '12345'
+          expect(json['secret_uid']).to eq 'MyString'
+        end
+      end
+
+      context 'without existing user' do
+        it 'creates user when it does not already have one' do
+          get '/user', headers: { 'Authorization' => 'authorized_user' }
+          expect(response).to have_http_status(200)
+
+          json = JSON.parse response.body
+          expect(json['external_uid']).to eq '12345'
+          expect(json['secret_uid']).to be_nil
+        end
       end
 
       it 'returns error on unauthenticated response' do

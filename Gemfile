@@ -17,6 +17,13 @@ gemspec
 
 group :development do
   gem 'rubocop'
+
+  # Mark up the models and such with database info.
+  gem 'annotate'
+
+  # Security static analysis
+  gem 'brakeman'
+  gem 'bundler-audit'
 end
 
 group :development, :test do

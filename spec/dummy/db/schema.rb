@@ -13,7 +13,7 @@
 ActiveRecord::Schema.define(version: 20170420171906) do
 
   create_table "wojxorfgax_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "external_uid"
+    t.string   "external_uid", null: false
     t.string   "secret_uid"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false

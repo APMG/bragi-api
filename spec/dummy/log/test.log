@@ -1,0 +1,4 @@
+  [1m[35m (18.9ms)[0m  [1m[35mDROP DATABASE IF EXISTS `wojxorfgax_test`[0m
+  [1m[35m (1.0ms)[0m  [1m[35mCREATE DATABASE `wojxorfgax_test` DEFAULT CHARACTER SET `utf8`[0m
+  [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+  [1m[35m (0.2ms)[0m  [1m[31mROLLBACK[0m

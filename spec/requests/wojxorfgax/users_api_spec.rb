@@ -22,7 +22,7 @@ module Wojxorfgax
 
           json = JSON.parse response.body
           expect(json['data'][0]['id']).to eq '12345'
-          expect(json['data'][0].keys).to eq %w(id type attributes)
+          expect(json['data'][0].keys).to eq %w[id type attributes]
           expect(json['data'][0]['type']).to eq 'wojxorfgax-users'
         end
       end
@@ -34,7 +34,7 @@ module Wojxorfgax
 
           json = JSON.parse response.body
           expect(json['data'][0]['id']).to eq '12345'
-          expect(json['data'][0].keys).to eq %w(id type attributes)
+          expect(json['data'][0].keys).to eq %w[id type attributes]
           expect(json['data'][0]['type']).to eq 'wojxorfgax-users'
         end
       end

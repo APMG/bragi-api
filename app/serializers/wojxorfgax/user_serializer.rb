@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Wojxorfgax
   class UserSerializer < ActiveModel::Serializer
     attributes :secret_uid

@@ -30,8 +30,8 @@ group :development, :test do
   gem 'factory_girl_rails'
   gem 'rspec-rails'
 
-  gem 'pry'
   gem 'byebug'
+  gem 'pry'
   gem 'pry-byebug'
   gem 'pry-doc'
 end

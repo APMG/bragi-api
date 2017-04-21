@@ -34,7 +34,7 @@ module Wojxorfgax
           expect(json['data'].size).to eq 10
 
           first_item = json['data'].first
-          expect(first_item.keys).to eq %w(id type attributes)
+          expect(first_item.keys).to eq %w[id type attributes]
           expect(first_item['type']).to eq 'wojxorfgax-items'
         end
       end
@@ -66,8 +66,8 @@ module Wojxorfgax
           expect(json['data'].size).to eq 1
 
           first_item = json['data'].first
-          expect(first_item.keys).to eq %w(id type attributes)
-          expect(first_item['id']).to eq '01/01/01/blah'
+          expect(first_item.keys).to eq %w[id type attributes]
+          expect(first_item['id']).to eq item.id.to_s
           expect(first_item['type']).to eq 'wojxorfgax-items'
         end
       end

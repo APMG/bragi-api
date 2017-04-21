@@ -88,7 +88,7 @@ module Wojxorfgax
       context 'with unauthorized user' do
         it 'returns error' do
           expect do
-            patch '/items/12345', headers: { 'Authorization' => 'unauthorized_user' }
+            patch '/items/123', headers: { 'Authorization' => 'unauthorized_user' }
           end.to raise_exception Wojxorfgax::ApplicationController::InvalidAuth
         end
       end

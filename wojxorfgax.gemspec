@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'rails', '~> 5.0.2'
   s.add_dependency 'active_model_serializers', '~> 0.10.0'
+  s.add_dependency 'acts_as_list', '~> 0.9.5'
 
   s.add_development_dependency 'mysql2'
 end

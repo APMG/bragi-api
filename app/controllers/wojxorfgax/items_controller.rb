@@ -9,7 +9,7 @@ module Wojxorfgax
     end
 
     def show
-      item = Item.find_by! audio_identifier: params[:id], user: current_user
+      item = Item.find_by! id: params[:id], user: current_user
       render json: [item]
     end
 
@@ -17,7 +17,7 @@ module Wojxorfgax
     def create; end
 
     def destroy
-      item = Item.find_by! audio_identifier: params[:id], user: current_user
+      item = Item.find_by! id: params[:id], user: current_user
       item.destroy
     end
   end

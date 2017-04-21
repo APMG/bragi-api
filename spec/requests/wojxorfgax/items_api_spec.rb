@@ -59,7 +59,7 @@ module Wojxorfgax
         let!(:item) { create :wojxorfgax_item, user: user, audio_identifier: '01/01/01/blah' }
 
         it 'returns item' do
-          get "/items/#{'01/01/01/blah'}", headers: { 'Authorization' => 'authorized_user' }
+          get "/items/#{item.id}", headers: { 'Authorization' => 'authorized_user' }
           expect(response).to have_http_status(200)
 
           json = JSON.parse response.body
@@ -75,7 +75,7 @@ module Wojxorfgax
       context 'with unauthorized user' do
         it 'returns error' do
           expect do
-            get '/items/12345', headers: { 'Authorization' => 'unauthorized_user' }
+            get '/items/123', headers: { 'Authorization' => 'unauthorized_user' }
           end.to raise_exception Wojxorfgax::ApplicationController::InvalidAuth
         end
       end
@@ -116,7 +116,7 @@ module Wojxorfgax
       end
 
       it 'supports deletion' do
-        delete '/items/12345', headers: { 'Authorization' => 'authorized_user' }
+        delete "/items/#{item.id}", headers: { 'Authorization' => 'authorized_user' }
         expect(response).to have_http_status(204)
         expect(Item.count).to eq 0
       end
@@ -124,7 +124,7 @@ module Wojxorfgax
       context 'with unauthorized user' do
         it 'returns error' do
           expect do
-            delete '/items/12345', headers: { 'Authorization' => 'unauthorized_user' }
+            delete "/items/#{item.id}", headers: { 'Authorization' => 'unauthorized_user' }
           end.to raise_exception Wojxorfgax::ApplicationController::InvalidAuth
         end
       end

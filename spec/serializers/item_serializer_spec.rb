@@ -10,11 +10,7 @@ RSpec.describe Wojxorfgax::UserSerializer do
     expect(serialization[:data].keys).to eq %i[id type attributes]
   end
 
-  it 'passes through only the audio_identifier as the id' do
-    expect(serialization[:data][:id]).to eq '2014/01/01/blah'
-  end
-
   it 'has an assumed set of attributes' do
-    expect(serialization[:data][:attributes].keys).to eq %i[after audio-url audio-title audio-description audio-hosts audio-program origin-url source playtime status finished]
+    expect(serialization[:data][:attributes].keys).to eq %i[after audio-url audio-identifier audio-title audio-description audio-hosts audio-program origin-url source playtime status finished]
   end
 end

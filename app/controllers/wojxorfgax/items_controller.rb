@@ -16,7 +16,7 @@ module Wojxorfgax
     def update
       # See if it already exists.
       item = Item.find_by!(id: params[:id], user: current_user)
-      update_params = permitted_params
+      update_params = permitted_params[:attributes]
       update_params.delete :audio_identifier
       item.attributes = update_params
 
@@ -27,8 +27,8 @@ module Wojxorfgax
 
     def create
       # See if it already exists.
-      item = Item.find_by(audio_identifier: permitted_params[:audio_identifier], user: current_user) || Item.new
-      item.attributes = permitted_params
+      item = Item.find_by(audio_identifier: permitted_params[:attributes][:audio_identifier], user: current_user) || Item.new
+      item.attributes = permitted_params[:attributes]
       item.user = current_user
 
       if item.save
@@ -46,7 +46,9 @@ module Wojxorfgax
     private
 
     def permitted_params
-      params.require(:item).permit(:after, :audio_identifier, :audio_url, :audio_title, :audio_description, :audio_hosts, :audio_program, :origin_url, :source, :playtime, :status, :finished)
+      params.require(:data).permit(:type, {
+        attributes: [:after, :audio_identifier, :audio_url, :audio_title, :audio_description, :audio_hosts, :audio_program, :origin_url, :source, :playtime, :status, :finished]
+      })
     end
   end
 end

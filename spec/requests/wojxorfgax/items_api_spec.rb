@@ -95,10 +95,15 @@ module Wojxorfgax
 
       it 'does not allow changing the audio_identifier' do
         attrs = {
-          audio_identifier: 'ajshgdfkjhagsf'
+          data: {
+            type: 'wojxorfgax-item',
+            attributes: {
+              audio_identifier: 'ajshgdfkjhagsf'
+            }
+          }
         }
 
-        patch "/items/#{item.id}", params: { item: attrs }, headers: { 'Authorization' => 'authorized_user' }
+        patch "/items/#{item.id}", params: attrs, headers: { 'Authorization' => 'authorized_user' }
         expect(response).to have_http_status(204)
 
         item.reload
@@ -108,10 +113,15 @@ module Wojxorfgax
 
       it 'updates existing individual field' do
         attrs = {
-          playtime: 123456
+          data: {
+            type: 'wojxorfgax-item',
+            attributes: {
+              playtime: 123456
+            }
+          }
         }
 
-        patch "/items/#{item.id}", params: { item: attrs }, headers: { 'Authorization' => 'authorized_user' }
+        patch "/items/#{item.id}", params: attrs, headers: { 'Authorization' => 'authorized_user' }
         expect(response).to have_http_status(204)
 
         item.reload
@@ -121,9 +131,14 @@ module Wojxorfgax
 
       it 'updates existing with field errors' do
         attrs = {
-          audio_title: ''
+          data: {
+            type: 'wojxorfgax-item',
+            attributes: {
+              audio_title: ''
+            }
+          }
         }
-        patch "/items/#{item.id}", params: { item: attrs }, headers: { 'Authorization' => 'authorized_user' }
+        patch "/items/#{item.id}", params: attrs, headers: { 'Authorization' => 'authorized_user' }
         expect(response).to have_http_status(400)
 
         json = JSON.parse(response.body)
@@ -144,7 +159,14 @@ module Wojxorfgax
       let(:item_attributes) { attributes_for :wojxorfgax_item, audio_identifier: 'blah1234' }
 
       it 'POSTs new' do
-        post '/items', params: { item: item_attributes }, headers: { 'Authorization' => 'authorized_user' }
+        attrs = {
+          data: {
+            type: 'wojxorfgax-item',
+            attributes: item_attributes,
+          }
+        }
+
+        post '/items', params: attrs, headers: { 'Authorization' => 'authorized_user' }
         expect(response).to have_http_status(200)
 
         expect(Item.count).to eq 1
@@ -157,7 +179,14 @@ module Wojxorfgax
       it 'POSTs existing' do
         preexisting_item = create :wojxorfgax_item, audio_identifier: 'blah1234', user: user
 
-        post '/items', params: { item: item_attributes }, headers: { 'Authorization' => 'authorized_user' }
+        attrs = {
+          data: {
+            type: 'wojxorfgax-item',
+            attributes: item_attributes,
+          }
+        }
+
+        post '/items', params: attrs, headers: { 'Authorization' => 'authorized_user' }
         expect(response).to have_http_status(200)
 
         preexisting_item.reload
@@ -170,9 +199,16 @@ module Wojxorfgax
       end
 
       it 'POSTs new with field errors' do
-        attrs = item_attributes.dup
-        attrs[:audio_identifier] = ''
-        post '/items', params: { item: attrs }, headers: { 'Authorization' => 'authorized_user' }
+        item_attrs = item_attributes.dup
+        item_attrs[:audio_identifier] = ''
+
+        attrs = {
+          data: {
+            type: 'wojxorfgax-item',
+            attributes: item_attrs,
+          }
+        }
+        post '/items', params: attrs, headers: { 'Authorization' => 'authorized_user' }
         expect(response).to have_http_status(400)
 
         expect(Item.count).to eq 0
@@ -187,7 +223,7 @@ module Wojxorfgax
 
       #   attrs = item_attributes.dup
       #   attrs[:playtime] = 123
-      #   post '/items', params: { item: attrs }, headers: { 'Authorization' => 'authorized_user' }
+      #   post '/items', params: attrs, headers: { 'Authorization' => 'authorized_user' }
       #   expect(response).to have_http_status(200)
 
       #   preexisting_item.reload
@@ -199,7 +235,7 @@ module Wojxorfgax
 
       #   attrs = item_attributes.dup
       #   attrs[:playtime] = 12345
-      #   post '/items', params: { item: attrs }, headers: { 'Authorization' => 'authorized_user' }
+      #   post '/items', params: attrs, headers: { 'Authorization' => 'authorized_user' }
       #   expect(response).to have_http_status(200)
 
       #   preexisting_item.reload

@@ -63,12 +63,9 @@ module Wojxorfgax
           expect(response).to have_http_status(200)
 
           json = JSON.parse response.body
-          expect(json['data'].size).to eq 1
-
-          first_item = json['data'].first
-          expect(first_item.keys).to eq %w[id type attributes]
-          expect(first_item['id']).to eq item.id.to_s
-          expect(first_item['type']).to eq 'wojxorfgax-items'
+          expect(json['data'].keys).to eq %w[id type attributes]
+          expect(json['data']['id']).to eq item.id.to_s
+          expect(json['data']['type']).to eq 'wojxorfgax-items'
         end
       end
 
@@ -82,8 +79,51 @@ module Wojxorfgax
     end
 
     describe 'PATCH #update' do
-      it 'supports 404'
-      it 'supports update'
+      let!(:item) { create :wojxorfgax_item, user: user }
+
+      it 'supports 404' do
+        expect do
+          patch '/items/123456', headers: { 'Authorization' => 'authorized_user' }
+        end.to raise_exception ActiveRecord::RecordNotFound
+      end
+
+      it 'does not allow changing the audio_identifier' do
+        attrs = {
+          audio_identifier: 'ajshgdfkjhagsf'
+        }
+
+        patch "/items/#{item.id}", params: { item: attrs }, headers: { 'Authorization' => 'authorized_user' }
+        expect(response).to have_http_status(204)
+
+        item.reload
+
+        expect(item.audio_identifier).to_not eq attrs[:audio_identifier]
+      end
+
+      it 'updates existing individual field' do
+        attrs = {
+          playtime: 123456
+        }
+
+        patch "/items/#{item.id}", params: { item: attrs }, headers: { 'Authorization' => 'authorized_user' }
+        expect(response).to have_http_status(204)
+
+        item.reload
+
+        expect(item.playtime).to eq 123456
+      end
+
+      it 'updates existing with field errors' do
+        attrs = {
+          audio_title: ''
+        }
+        patch "/items/#{item.id}", params: { item: attrs }, headers: { 'Authorization' => 'authorized_user' }
+        expect(response).to have_http_status(400)
+
+        json = JSON.parse(response.body)
+        expect(json['errors'][0]['source']['pointer']).to eq '/data/attributes/audio-title'
+        expect(json['errors'][0]['detail']).to eq "can't be blank"
+      end
 
       context 'with unauthorized user' do
         it 'returns error' do
@@ -95,7 +135,70 @@ module Wojxorfgax
     end
 
     describe 'POST #create' do
-      it 'supports creation'
+      let(:item_attributes) { attributes_for :wojxorfgax_item, audio_identifier: 'blah1234' }
+
+      it 'POSTs new' do
+        post '/items', params: { item: item_attributes }, headers: { 'Authorization' => 'authorized_user' }
+        expect(response).to have_http_status(200)
+
+        expect(Item.count).to eq 1
+        first_db_item = Item.first
+
+        json = JSON.parse(response.body)
+        expect(json['data']['id']).to eq first_db_item.id.to_s
+      end
+
+      it 'POSTs existing' do
+        preexisting_item = create :wojxorfgax_item, audio_identifier: 'blah1234', user: user
+
+        post '/items', params: { item: item_attributes }, headers: { 'Authorization' => 'authorized_user' }
+        expect(response).to have_http_status(200)
+
+        preexisting_item.reload
+
+        expect(Item.count).to eq 1
+        expect(Item.first).to eq preexisting_item
+
+        json = JSON.parse(response.body)
+        expect(json['data']['id']).to eq preexisting_item.id.to_s
+      end
+
+      it 'POSTs new with field errors' do
+        attrs = item_attributes.dup
+        attrs[:audio_identifier] = ''
+        post '/items', params: { item: attrs }, headers: { 'Authorization' => 'authorized_user' }
+        expect(response).to have_http_status(400)
+
+        expect(Item.count).to eq 0
+
+        json = JSON.parse(response.body)
+        expect(json['errors'][0]['source']['pointer']).to eq '/data/attributes/audio-identifier'
+        expect(json['errors'][0]['detail']).to eq "can't be blank"
+      end
+
+      # it 'POSTs existing with older play_start_time' do
+      #   preexisting_item = create :wojxorfgax_item, audio_identifier: 'blah1234', user: user, playtime: 1234
+
+      #   attrs = item_attributes.dup
+      #   attrs[:playtime] = 123
+      #   post '/items', params: { item: attrs }, headers: { 'Authorization' => 'authorized_user' }
+      #   expect(response).to have_http_status(200)
+
+      #   preexisting_item.reload
+      #   expect(preexisting_item.playtime).to eq 1234
+      # end
+
+      # it 'POSTs existing with newer play_start_time' do
+      #   preexisting_item = create :wojxorfgax_item, audio_identifier: 'blah1234', user: user, playtime: 1234
+
+      #   attrs = item_attributes.dup
+      #   attrs[:playtime] = 12345
+      #   post '/items', params: { item: attrs }, headers: { 'Authorization' => 'authorized_user' }
+      #   expect(response).to have_http_status(200)
+
+      #   preexisting_item.reload
+      #   expect(preexisting_item.playtime).to eq 12345
+      # end
 
       context 'with unauthorized user' do
         it 'returns error' do

@@ -26,5 +26,30 @@ require 'rails_helper'
 
 module Wojxorfgax
   RSpec.describe Item, type: :model do
+    let(:user) { create :wojxorfgax_user }
+    let(:status) { :unplayed }
+    let(:item) { build :wojxorfgax_item, status: status, user: user }
+
+    describe '#finished' do
+      context 'with played status' do
+        let(:status) { :played }
+
+        it 'allows a finished datetime' do
+          item.finished = Time.zone.now
+          expect(item).to be_valid
+        end
+      end
+
+      (Item.statuses.keys - ['played']).each do |enum_status|
+        context "with #{enum_status} status" do
+          let(:status) { enum_status }
+
+          it 'does not allow a finished datetime' do
+            item.finished = Time.zone.now
+            expect(item).to_not be_valid
+          end
+        end
+      end
+    end
   end
 end

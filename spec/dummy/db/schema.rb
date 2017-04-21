@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170421164955) do
+ActiveRecord::Schema.define(version: 20170421170508) do
 
   create_table "wojxorfgax_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.float    "sort",               limit: 24
@@ -23,7 +23,7 @@ ActiveRecord::Schema.define(version: 20170421164955) do
     t.string   "origin_url"
     t.string   "source",                           null: false
     t.integer  "playtime",                         null: false
-    t.string   "status",                           null: false
+    t.integer  "status",                           null: false
     t.datetime "finished"
     t.integer  "wojxorfgax_user_id",               null: false
     t.datetime "created_at",                       null: false

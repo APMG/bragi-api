@@ -34,8 +34,8 @@ FactoryGirl.define do
     origin_url 'MyString'
     source 'MyString'
     playtime 1
-    status 'MyString'
-    finished '2017-04-20 12:24:20'
+    status :unplayed
+    finished nil
     user nil
   end
 end

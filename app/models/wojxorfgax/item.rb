@@ -25,5 +25,8 @@
 module Wojxorfgax
   class Item < ApplicationRecord
     belongs_to :user, foreign_key: :wojxorfgax_user_id
+    enum status: { unplayed: 0, playing: 1, played: 2 }
+
+    validates :finished, absence: true, unless: :played?
   end
 end

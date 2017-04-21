@@ -15,6 +15,12 @@ module Wojxorfgax
     let!(:user) { create :wojxorfgax_user, external_uid: '12345' }
 
     describe 'GET #index' do
+      it 'returns correct json api headers' do
+        get '/items', headers: { 'Authorization' => 'authorized_user' }
+        expect(response).to have_http_status(200)
+        expect(response.content_type).to eq 'application/vnd.api+json'
+      end
+
       it 'returns empty set' do
         get '/items', headers: { 'Authorization' => 'authorized_user' }
         expect(response).to have_http_status(200)

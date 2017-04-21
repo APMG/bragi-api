@@ -28,6 +28,7 @@ module Wojxorfgax
     enum status: { unplayed: 0, playing: 1, played: 2 }
 
     validates :finished, absence: true, unless: :played?
+    validates :finished, presence: true, if: :played?
 
     validates :audio_identifier, presence: true
     validates :audio_url, presence: true

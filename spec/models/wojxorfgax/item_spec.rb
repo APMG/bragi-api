@@ -38,6 +38,11 @@ module Wojxorfgax
           item.finished = Time.zone.now
           expect(item).to be_valid
         end
+
+        it 'requires a finished datetime' do
+          expect(item).to_not be_valid
+          expect(item.errors[:finished]).to eq ["can't be blank"]
+        end
       end
 
       (Item.statuses.keys - ['played']).each do |enum_status|

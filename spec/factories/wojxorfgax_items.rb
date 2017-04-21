@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: wojxorfgax_items
@@ -15,7 +14,7 @@
 #  origin_url         :string(255)
 #  source             :string(255)      not null
 #  playtime           :integer          not null
-#  status             :string(255)      not null
+#  status             :integer          not null
 #  finished           :datetime
 #  wojxorfgax_user_id :integer          not null
 #  created_at         :datetime         not null

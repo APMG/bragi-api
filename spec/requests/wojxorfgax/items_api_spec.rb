@@ -107,8 +107,19 @@ module Wojxorfgax
     end
 
     describe 'DELETE #destroy' do
-      it 'supports 404'
-      it 'supports deletion'
+      let!(:item) { create :wojxorfgax_item, audio_identifier: '12345', user: user }
+
+      it 'supports 404' do
+        expect do
+          delete '/items/123456', headers: { 'Authorization' => 'authorized_user' }
+        end.to raise_exception ActiveRecord::RecordNotFound
+      end
+
+      it 'supports deletion' do
+        delete '/items/12345', headers: { 'Authorization' => 'authorized_user' }
+        expect(response).to have_http_status(204)
+        expect(Item.count).to eq 0
+      end
 
       context 'with unauthorized user' do
         it 'returns error' do

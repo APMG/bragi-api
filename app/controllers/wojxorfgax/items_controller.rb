@@ -15,6 +15,10 @@ module Wojxorfgax
 
     def update; end
     def create; end
-    def destroy; end
+
+    def destroy
+      item = Item.find_by! audio_identifier: params[:id], user: current_user
+      item.destroy
+    end
   end
 end

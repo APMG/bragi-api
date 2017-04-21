@@ -46,9 +46,9 @@ module Wojxorfgax
     private
 
     def permitted_params
-      params.require(:data).permit(:type, {
-        attributes: [:after, :audio_identifier, :audio_url, :audio_title, :audio_description, :audio_hosts, :audio_program, :origin_url, :source, :playtime, :status, :finished]
-      })
+      params.require(:data).permit(
+        :type, attributes: %i[after audio_identifier audio_url audio_title audio_description audio_hosts audio_program origin_url source playtime status finished]
+      )
     end
   end
 end

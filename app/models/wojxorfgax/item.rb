@@ -37,11 +37,11 @@ module Wojxorfgax
     validates :playtime, presence: true
 
     FIRST_ITEM_POSITION = 0
-    MAX_ITEM_POSITION = 2147483647
-    MIN_ITEM_POSITION = -2147483648
+    MAX_ITEM_POSITION = 2_147_483_647
+    MIN_ITEM_POSITION = -2_147_483_648
     POSITION_STEP = 10
 
-    scope :sorted, ->(user_id) { where(wojxorfgax_user_id: user_id, status: [:unplayed, :playing]).order(position: :asc) }
+    scope :sorted, ->(user_id) { where(wojxorfgax_user_id: user_id, status: %i[unplayed playing]).order(position: :asc) }
 
     before_save :set_position_after
 
@@ -60,11 +60,11 @@ module Wojxorfgax
 
       if @_after == :first
         first_item = self.class.sorted(wojxorfgax_user_id).first
-        if first_item
-          self.position = first_item.position - POSITION_STEP
-        else
-          self.position = FIRST_ITEM_POSITION
-        end
+        self.position = if first_item
+                          first_item.position - POSITION_STEP
+                        else
+                          FIRST_ITEM_POSITION
+                        end
       elsif !played? && !@_after.played?
         raise AfterItemUnpersistedError, 'Item tried to be attached to unpersisted item' unless @_after.persisted?
         raise WrongUserAfterError, 'Item tried to be attached to item belonging to a different user' unless @_after.user == user
@@ -87,7 +87,7 @@ module Wojxorfgax
     end
 
     def self.resort(user_id)
-      self.sorted(user_id).each_with_index do |item, idx|
+      sorted(user_id).each_with_index do |item, idx|
         item.position = idx * POSITION_STEP
         item.save
       end

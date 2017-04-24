@@ -143,7 +143,7 @@ module Wojxorfgax
       end
 
       it 'inserts at the end with no space afterwards (maximum)' do
-        other_item = create :wojxorfgax_item, status: :unplayed, user: user, position: 2147483647
+        other_item = create :wojxorfgax_item, status: :unplayed, user: user, position: 2_147_483_647
         item.after = other_item
         expect do
           item.save!
@@ -151,7 +151,7 @@ module Wojxorfgax
       end
 
       it 'inserts at the beginning with no space before (minimum)' do
-        create :wojxorfgax_item, status: :unplayed, user: user, position: -2147483648
+        create :wojxorfgax_item, status: :unplayed, user: user, position: -2_147_483_648
         item.after = nil
         expect do
           item.save!

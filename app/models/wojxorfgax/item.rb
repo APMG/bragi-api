@@ -35,5 +35,65 @@ module Wojxorfgax
     validates :audio_title, presence: true
     validates :source, presence: true
     validates :playtime, presence: true
+
+    FIRST_ITEM_POSITION = 0
+    MAX_ITEM_POSITION = 2147483647
+    MIN_ITEM_POSITION = -2147483648
+    POSITION_STEP = 10
+
+    scope :sorted, ->(user_id) { where(wojxorfgax_user_id: user_id, status: [:unplayed, :playing]).order(position: :asc) }
+
+    before_save :set_position_after
+
+    def after
+      @_after || (position.nil? ? nil : self.class.sorted(wojxorfgax_user_id).where('position < ?', position).reorder(position: :desc).first)
+    end
+
+    def after=(other_item)
+      @_after = other_item || :first
+    end
+
+    private
+
+    def set_position_after
+      return unless @_after
+
+      if @_after == :first
+        first_item = self.class.sorted(wojxorfgax_user_id).first
+        if first_item
+          self.position = first_item.position - POSITION_STEP
+        else
+          self.position = FIRST_ITEM_POSITION
+        end
+      elsif !played? && !@_after.played?
+        raise AfterItemUnpersistedError, 'Item tried to be attached to unpersisted item' unless @_after.persisted?
+        raise WrongUserAfterError, 'Item tried to be attached to item belonging to a different user' unless @_after.user == user
+        start_position = @_after.position
+        next_item = self.class.sorted(wojxorfgax_user_id).where('position > ?', start_position).reorder(position: :asc).first
+        if next_item
+          end_position = next_item.position
+          if end_position - start_position > 1
+            self.position = start_position + (end_position - start_position) / 2
+          else
+            self.class.resort(wojxorfgax_user_id)
+            set_position_after
+          end
+        else
+          self.position = start_position + POSITION_STEP
+        end
+      end
+
+      @_after = nil
+    end
+
+    def self.resort(user_id)
+      self.sorted(user_id).each_with_index do |item, idx|
+        item.position = idx * POSITION_STEP
+        item.save
+      end
+    end
+
+    class AfterItemUnpersistedError < StandardError; end
+    class WrongUserAfterError < StandardError; end
   end
 end

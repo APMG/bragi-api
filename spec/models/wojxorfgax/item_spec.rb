@@ -166,6 +166,14 @@ module Wojxorfgax
         end.to raise_error Wojxorfgax::Item::AfterItemUnpersistedError
       end
 
+      it 'ignores `after` if played and first item' do
+        item.finished = Time.zone.now
+        item.status = :played
+        item.after = nil
+        item.save!
+        expect(item.position).to be_nil
+      end
+
       it 'ignores `after` if played' do
         item1 = create :wojxorfgax_item, status: :unplayed, user: user, position: 0
         item.finished = Time.zone.now

@@ -45,6 +45,7 @@ module Wojxorfgax
 
     before_save :set_position_after
 
+    # TODO: Refactor all of this mess.
     def after
       @_after || (position.nil? ? nil : self.class.sorted(wojxorfgax_user_id).where('position < ?', position).reorder(position: :desc).first)
     end
@@ -56,7 +57,7 @@ module Wojxorfgax
     private
 
     def set_position_after
-      return unless @_after
+      return if !@_after || played?
 
       if @_after == :first
         first_item = self.class.sorted(wojxorfgax_user_id).first
@@ -65,7 +66,7 @@ module Wojxorfgax
                         else
                           FIRST_ITEM_POSITION
                         end
-      elsif !played? && !@_after.played?
+      elsif !@_after.played?
         raise AfterItemUnpersistedError, 'Item tried to be attached to unpersisted item' unless @_after.persisted?
         raise WrongUserAfterError, 'Item tried to be attached to item belonging to a different user' unless @_after.user == user
         start_position = @_after.position

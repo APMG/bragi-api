@@ -11,26 +11,45 @@ module Wojxorfgax
       end
 
       def position
-        raise Item::AfterItemUnpersistedError, 'Item tried to be attached to unpersisted item' unless @after.persisted?
-        raise Item::WrongUserAfterError, 'Item tried to be attached to item belonging to a different user' unless @after.user == @item.user
+        check_valid_after
 
         return if @after.played?
 
-        start_position = @after.position
-        next_item = Wojxorfgax::Item.sorted(@item.wojxorfgax_user_id).where('position > ?', start_position).reorder(position: :asc).first
-        if next_item
-          end_position = next_item.position
-          if end_position - start_position > 1
-            start_position + (end_position - start_position) / 2
-          else
-            # REFACTOR: This next line makes this query potentially have a
-            # side-affect. That breaks CQS.
-            Wojxorfgax::Item.resort(@item.wojxorfgax_user_id)
-            position # Recursive
-          end
+        return start_position + PositionTracker::POSITION_STEP unless next_item
+
+        if available_distance > 1
+          start_position + available_distance / 2
         else
-          start_position + PositionTracker::POSITION_STEP
+          # REFACTOR: This next line makes this query potentially have a
+          # side-affect. That breaks CQS.
+          Wojxorfgax::Item.resort(@item.wojxorfgax_user_id)
+          position # Recursive
         end
+      end
+
+      private
+
+      def start_position
+        # Make the algorithm more readable.
+        @after.position
+      end
+
+      def end_position
+        # Make the algorithm more readable.
+        next_item.position
+      end
+
+      def available_distance
+        end_position - start_position
+      end
+
+      def check_valid_after
+        raise Item::AfterItemUnpersistedError, 'Item tried to be attached to unpersisted item' unless @after.persisted?
+        raise Item::WrongUserAfterError, 'Item tried to be attached to item belonging to a different user' unless @after.user == @item.user
+      end
+
+      def next_item
+        Wojxorfgax::Item.sorted(@item.wojxorfgax_user_id).where('position > ?', start_position).reorder(position: :asc).first
       end
     end
   end

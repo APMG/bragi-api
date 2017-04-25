@@ -11,6 +11,12 @@ module Wojxorfgax
 
     def index
       items = current_user.items.page(params[:page]).per(DEFAULT_PAGE_SIZE)
+      if params.dig(:filter, :source)
+        items = items.where(source: params.dig(:filter, :source))
+      end
+      if params.dig(:filter, :status)
+        items = items.where(status: params.dig(:filter, :status))
+      end
       render json: items, meta: pagination_dict(items)
     end
 

@@ -82,6 +82,58 @@ module Wojxorfgax
           expect(json['meta']['current-page']).to eq 1
         end
       end
+
+      context 'with a mix of sources and statuses' do
+        let!(:items1) { create_list :wojxorfgax_item, 10, user: user, source: 'blah' }
+        let!(:items2) { create_list :wojxorfgax_played_item, 10, user: user, source: 'blah' }
+        let!(:items3) { create_list :wojxorfgax_item, 10, user: user, source: 'blah1' }
+        let!(:items4) { create_list :wojxorfgax_played_item, 10, user: user, source: 'blah1' }
+
+        it 'fetches by source' do
+          get '/items', params: { filter: { source: 'blah' } }, headers: { 'Authorization' => 'authorized_user' }
+          expect(response).to have_http_status(200)
+
+          json = JSON.parse response.body
+          expect(json['data'].size).to eq 20
+          json['data'].each do |item|
+            expect(item['attributes']['source']).to eq 'blah'
+          end
+        end
+
+        it 'fetches by status' do
+          get '/items', params: { filter: { status: 'played' } }, headers: { 'Authorization' => 'authorized_user' }
+          expect(response).to have_http_status(200)
+
+          json = JSON.parse response.body
+          expect(json['data'].size).to eq 20
+          json['data'].each do |item|
+            expect(item['attributes']['status']).to eq 'played'
+          end
+        end
+
+        it 'fetches by array of statuses' do
+          get '/items', params: { filter: { status: %w[played playing] } }, headers: { 'Authorization' => 'authorized_user' }
+          expect(response).to have_http_status(200)
+
+          json = JSON.parse response.body
+          expect(json['data'].size).to eq 20
+          json['data'].each do |item|
+            expect(item['attributes']['status']).to eq 'played'
+          end
+        end
+
+        it 'fetches by source and status' do
+          get '/items', params: { filter: { status: 'played', source: 'blah1' } }, headers: { 'Authorization' => 'authorized_user' }
+          expect(response).to have_http_status(200)
+
+          json = JSON.parse response.body
+          expect(json['data'].size).to eq 10
+          json['data'].each do |item|
+            expect(item['attributes']['status']).to eq 'played'
+            expect(item['attributes']['source']).to eq 'blah1'
+          end
+        end
+      end
     end
 
     describe 'GET #show' do

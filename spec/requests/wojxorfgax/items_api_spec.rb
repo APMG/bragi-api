@@ -52,6 +52,36 @@ module Wojxorfgax
           end.to raise_exception Wojxorfgax::ApplicationController::InvalidAuth
         end
       end
+
+      context 'with more than 50 items' do
+        let!(:items) { create_list :wojxorfgax_item, 61, user: user }
+
+        it 'returns page 2' do
+          get '/items', params: { page: 2 }, headers: { 'Authorization' => 'authorized_user' }
+          expect(response).to have_http_status(200)
+
+          json = JSON.parse response.body
+          expect(json['data'].size).to eq 11
+          expect(json['links'].keys).to include 'self'
+          expect(json['links'].keys).to include 'prev'
+          expect(json['links'].keys).to include 'first'
+          expect(json['meta']['current-page']).to eq 2
+          expect(json['meta']['total-pages']).to eq 2
+          expect(json['meta']['total-count']).to eq 61
+        end
+
+        it 'shows next and last links on page 1' do
+          get '/items', params: { page: 1 }, headers: { 'Authorization' => 'authorized_user' }
+          expect(response).to have_http_status(200)
+
+          json = JSON.parse response.body
+          expect(json['data'].size).to eq 50
+          expect(json['links'].keys).to include 'self'
+          expect(json['links'].keys).to include 'next'
+          expect(json['links'].keys).to include 'last'
+          expect(json['meta']['current-page']).to eq 1
+        end
+      end
     end
 
     describe 'GET #show' do

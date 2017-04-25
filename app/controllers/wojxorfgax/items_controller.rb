@@ -2,10 +2,16 @@
 
 require_dependency 'wojxorfgax/application_controller'
 
+require 'kaminari/core'
+require 'kaminari/activerecord'
+
 module Wojxorfgax
   class ItemsController < ApplicationController
+    DEFAULT_PAGE_SIZE = 50
+
     def index
-      render json: current_user.items
+      items = current_user.items.page(params[:page]).per(DEFAULT_PAGE_SIZE)
+      render json: items, meta: pagination_dict(items)
     end
 
     def show

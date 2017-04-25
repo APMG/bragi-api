@@ -9,8 +9,13 @@ module Wojxorfgax
   class ItemsController < ApplicationController
     DEFAULT_PAGE_SIZE = 50
 
+    Kaminari.configure do |config|
+      config.max_per_page = 100
+    end
+
     def index
-      items = current_user.items.page(params[:page]).per(DEFAULT_PAGE_SIZE)
+      page_size = params.dig(:page, :size) || DEFAULT_PAGE_SIZE
+      items = current_user.items.page(params.dig(:page, :number)).per(page_size)
       if params.dig(:filter, :source)
         items = items.where(source: params.dig(:filter, :source))
       end

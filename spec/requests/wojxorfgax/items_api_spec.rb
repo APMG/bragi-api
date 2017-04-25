@@ -57,7 +57,7 @@ module Wojxorfgax
         let!(:items) { create_list :wojxorfgax_item, 61, user: user }
 
         it 'returns page 2' do
-          get '/items', params: { page: 2 }, headers: { 'Authorization' => 'authorized_user' }
+          get '/items', params: { page: { number: 2 } }, headers: { 'Authorization' => 'authorized_user' }
           expect(response).to have_http_status(200)
 
           json = JSON.parse response.body
@@ -71,7 +71,7 @@ module Wojxorfgax
         end
 
         it 'shows next and last links on page 1' do
-          get '/items', params: { page: 1 }, headers: { 'Authorization' => 'authorized_user' }
+          get '/items', params: { page: { number: 1 } }, headers: { 'Authorization' => 'authorized_user' }
           expect(response).to have_http_status(200)
 
           json = JSON.parse response.body
@@ -80,6 +80,25 @@ module Wojxorfgax
           expect(json['links'].keys).to include 'next'
           expect(json['links'].keys).to include 'last'
           expect(json['meta']['current-page']).to eq 1
+        end
+
+        it 'allows defined page size' do
+          get '/items', params: { page: { number: 1, size: 20 } }, headers: { 'Authorization' => 'authorized_user' }
+          expect(response).to have_http_status(200)
+
+          json = JSON.parse response.body
+          expect(json['data'].size).to eq 20
+        end
+      end
+
+      context 'with more than 200 items' do
+        let!(:items) { create_list :wojxorfgax_item, 110, user: user }
+        it 'limits defined page size' do
+          get '/items', params: { page: { number: 1, size: 1000 } }, headers: { 'Authorization' => 'authorized_user' }
+          expect(response).to have_http_status(200)
+
+          json = JSON.parse response.body
+          expect(json['data'].size).to eq 100
         end
       end
 

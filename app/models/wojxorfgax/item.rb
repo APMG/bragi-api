@@ -30,71 +30,157 @@ module Wojxorfgax
     validates :finished, absence: true, unless: :played?
     validates :finished, presence: true, if: :played?
 
+    validates :position, absence: true, if: :played?
+    # validates :position, presence: true, unless: :played?
+
     validates :audio_identifier, presence: true
     validates :audio_url, presence: true
     validates :audio_title, presence: true
     validates :source, presence: true
     validates :playtime, presence: true
 
-    FIRST_ITEM_POSITION = 0
-    MAX_ITEM_POSITION = 2_147_483_647
-    MIN_ITEM_POSITION = -2_147_483_648
-    POSITION_STEP = 10
-
     scope :sorted, ->(user_id) { where(wojxorfgax_user_id: user_id, status: %i[unplayed playing]).order(position: :asc) }
 
     before_save :set_position_after
 
-    # TODO: Refactor all of this mess.
     def after
-      @_after || (position.nil? ? nil : self.class.sorted(wojxorfgax_user_id).where('position < ?', position).reorder(position: :desc).first)
+      position_tracker.after
     end
 
     def after=(other_item)
-      @_after = other_item || :first
+      position_tracker.after = other_item
     end
 
     private
 
+    def position_tracker
+      @_position_tracker ||= PositionTracker.new(self)
+    end
+
     def set_position_after
-      return if !@_after || played?
-
-      if @_after == :first
-        first_item = self.class.sorted(wojxorfgax_user_id).first
-        self.position = if first_item
-                          first_item.position - POSITION_STEP
-                        else
-                          FIRST_ITEM_POSITION
-                        end
-      elsif !@_after.played?
-        raise AfterItemUnpersistedError, 'Item tried to be attached to unpersisted item' unless @_after.persisted?
-        raise WrongUserAfterError, 'Item tried to be attached to item belonging to a different user' unless @_after.user == user
-        start_position = @_after.position
-        next_item = self.class.sorted(wojxorfgax_user_id).where('position > ?', start_position).reorder(position: :asc).first
-        if next_item
-          end_position = next_item.position
-          if end_position - start_position > 1
-            self.position = start_position + (end_position - start_position) / 2
-          else
-            self.class.resort(wojxorfgax_user_id)
-            set_position_after
-          end
-        else
-          self.position = start_position + POSITION_STEP
-        end
+      self.position = if played?
+        nil
+      else
+        position_tracker.position
       end
-
-      @_after = nil
     end
 
     def self.resort(user_id)
       sorted(user_id).each_with_index do |item, idx|
-        item.position = idx * POSITION_STEP
+        item.position = idx * PositionTracker::POSITION_STEP
         item.save
       end
     end
 
     class AfterItemUnpersistedError < StandardError; end
     class WrongUserAfterError < StandardError; end
+
+    class PositionTracker
+      FIRST_ITEM_POSITION = 0
+      MAX_ITEM_POSITION = 2_147_483_647
+      MIN_ITEM_POSITION = -2_147_483_648
+      POSITION_STEP = 10
+
+      def initialize(item)
+        @item = item
+        init_tracker
+      end
+
+      def after=(other_item)
+        @internal_tracker = if other_item.nil?
+          FirstTracker.new(@item)
+        else
+          AfterTracker.new(@item, other_item)
+        end
+      end
+
+      def after
+        @internal_tracker.after
+      end
+
+      def position
+        @internal_tracker.position.tap do
+          init_tracker
+        end
+      end
+
+      private
+
+      def init_tracker
+        @internal_tracker = UnchangedTracker.new(@item)
+      end
+
+      class FirstTracker
+        def initialize(item)
+          @item = item
+        end
+
+        def position
+          first_item = Wojxorfgax::Item.sorted(@item.wojxorfgax_user_id).first
+          if first_item
+            first_item.position - PositionTracker::POSITION_STEP
+          else
+            PositionTracker::FIRST_ITEM_POSITION
+          end
+        end
+      end
+
+      class AfterTracker
+        attr_reader :after
+
+        def initialize(item, after)
+          @item = item
+          @after = after
+        end
+
+        def position
+          raise AfterItemUnpersistedError, 'Item tried to be attached to unpersisted item' unless @after.persisted?
+          raise WrongUserAfterError, 'Item tried to be attached to item belonging to a different user' unless @after.user == @item.user
+
+          return if @after.played?
+
+          start_position = @after.position
+          next_item = Wojxorfgax::Item.sorted(@item.wojxorfgax_user_id).where('position > ?', start_position).reorder(position: :asc).first
+          if next_item
+            end_position = next_item.position
+            if end_position - start_position > 1
+              return start_position + (end_position - start_position) / 2
+            else
+              # REFACTOR: This next line makes this query potentially have a
+              # side-affect. That breaks CQS.
+              Wojxorfgax::Item.resort(@item.wojxorfgax_user_id)
+              return position # Recursive
+            end
+          else
+            return start_position + PositionTracker::POSITION_STEP
+          end
+        end
+      end
+
+      class UnchangedTracker
+        def initialize(item)
+          @item = item
+        end
+
+        def after
+          return if @item.position.nil?
+          Wojxorfgax::Item.sorted(@item.wojxorfgax_user_id).where('position < ?', @item.position).reorder(position: :desc).first
+        end
+
+        def position
+          # Default to last
+          if @item.position.nil?
+            last_item = Wojxorfgax::Item.sorted(@item.wojxorfgax_user_id).last
+            if last_item
+              Wojxorfgax::Item.sorted(@item.wojxorfgax_user_id).last.position + PositionTracker::POSITION_STEP
+            else
+              PositionTracker::FIRST_ITEM_POSITION
+            end
+          else
+            @item.position
+          end
+        end
+      end
+    end
   end
 end

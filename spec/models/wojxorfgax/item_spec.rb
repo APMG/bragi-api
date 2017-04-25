@@ -28,7 +28,7 @@ module Wojxorfgax
   RSpec.describe Item, type: :model do
     let(:user) { create :wojxorfgax_user }
     let(:status) { :unplayed }
-    let(:item) { build :wojxorfgax_item, status: status, user: user }
+    let(:item) { build :wojxorfgax_item, status: status, user: user, position: 1 }
 
     describe '#finished' do
       context 'with played status' do
@@ -36,6 +36,7 @@ module Wojxorfgax
 
         it 'allows a finished datetime' do
           item.finished = Time.zone.now
+          item.position = nil
           expect(item).to be_valid
         end
 
@@ -59,7 +60,8 @@ module Wojxorfgax
 
     describe '#after' do
       let(:position) { 1 }
-      let(:item) { create :wojxorfgax_item, status: status, user: user, position: position }
+      let(:finished) { nil }
+      let(:item) { create :wojxorfgax_item, status: status, user: user, position: position, finished: finished }
 
       subject { item.after }
 
@@ -85,6 +87,8 @@ module Wojxorfgax
 
       context 'when position is null' do
         let(:position) { nil }
+        let(:status) { :played }
+        let(:finished) { Time.zone.now }
 
         it 'is always null' do
           expect(subject).to be_nil
@@ -170,6 +174,7 @@ module Wojxorfgax
         item.finished = Time.zone.now
         item.status = :played
         item.after = nil
+        item.position = nil
         item.save!
         expect(item.position).to be_nil
       end
@@ -178,13 +183,14 @@ module Wojxorfgax
         item1 = create :wojxorfgax_item, status: :unplayed, user: user, position: 0
         item.finished = Time.zone.now
         item.status = :played
+        item.position = nil
         item.after = item1
         item.save!
         expect(item.position).to be_nil
       end
 
       it 'ignores `after` if other item played' do
-        item1 = create :wojxorfgax_item, status: :played, user: user, position: 0, finished: Time.zone.now
+        item1 = create :wojxorfgax_played_item, user: user
         item.after = item1
         item.save!
         expect(item.position).to be_nil
@@ -194,6 +200,12 @@ module Wojxorfgax
         item2 = build :wojxorfgax_item, user: user, status: :unplayed
         item.after = item2
         expect(item.after).to eq item2
+      end
+
+      it 'defaults to the very end' do
+        item.save!
+        item1 = create :wojxorfgax_item, user: user, status: :unplayed, position: nil
+        expect(item1.position).to eq 11
       end
     end
 

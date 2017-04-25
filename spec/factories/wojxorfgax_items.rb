@@ -25,7 +25,7 @@
 FactoryGirl.define do
   factory :wojxorfgax_item, class: 'Wojxorfgax::Item' do
     sequence(:audio_identifier) { |i| "01/01/01/blah#{i}" }
-    sort 1.5
+    sequence(:position) { |i| i }
     audio_url 'MyString'
     audio_title 'MyString'
     audio_description 'MyText'
@@ -37,5 +37,11 @@ FactoryGirl.define do
     status :unplayed
     finished nil
     user nil
+
+    factory :wojxorfgax_played_item do
+      position nil
+      finished Time.zone.now
+      status :played
+    end
   end
 end

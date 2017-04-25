@@ -116,7 +116,7 @@ module Wojxorfgax
           data: {
             type: 'wojxorfgax-item',
             attributes: {
-              playtime: 123456
+              playtime: 123_456
             }
           }
         }
@@ -126,7 +126,7 @@ module Wojxorfgax
 
         item.reload
 
-        expect(item.playtime).to eq 123456
+        expect(item.playtime).to eq 123_456
       end
 
       it 'updates existing with field errors' do
@@ -162,7 +162,7 @@ module Wojxorfgax
         attrs = {
           data: {
             type: 'wojxorfgax-item',
-            attributes: item_attributes,
+            attributes: item_attributes
           }
         }
 
@@ -182,7 +182,7 @@ module Wojxorfgax
         attrs = {
           data: {
             type: 'wojxorfgax-item',
-            attributes: item_attributes,
+            attributes: item_attributes
           }
         }
 
@@ -205,7 +205,7 @@ module Wojxorfgax
         attrs = {
           data: {
             type: 'wojxorfgax-item',
-            attributes: item_attrs,
+            attributes: item_attrs
           }
         }
         post '/items', params: attrs, headers: { 'Authorization' => 'authorized_user' }

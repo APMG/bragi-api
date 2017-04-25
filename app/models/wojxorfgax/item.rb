@@ -43,13 +43,8 @@ module Wojxorfgax
 
     before_save :set_position_after
 
-    def after
-      position_tracker.after
-    end
-
-    def after=(other_item)
-      position_tracker.after = other_item
-    end
+    delegate :after, to: :position_tracker
+    delegate :after=, to: :position_tracker
 
     private
 
@@ -59,9 +54,9 @@ module Wojxorfgax
 
     def set_position_after
       self.position = if played?
-        nil
-      else
-        position_tracker.position
+                        nil
+                      else
+                        position_tracker.position
       end
     end
 

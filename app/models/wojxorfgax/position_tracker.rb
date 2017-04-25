@@ -14,9 +14,9 @@ module Wojxorfgax
 
     def after=(other_item)
       @internal_tracker = if other_item.nil?
-        FirstTracker.new(@item)
-      else
-        AfterTracker.new(@item, other_item)
+                            FirstTracker.new(@item)
+                          else
+                            AfterTracker.new(@item, other_item)
       end
     end
 

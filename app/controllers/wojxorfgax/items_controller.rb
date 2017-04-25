@@ -38,6 +38,10 @@ module Wojxorfgax
       update_params = permitted_params[:attributes]
       update_params.delete :audio_identifier
       item.attributes = update_params
+      if item.played?
+        item.finished = Time.zone.now if item.finished.nil?
+        item.position = nil
+      end
 
       return if item.save
       render json: item, status: :bad_request, serializer: ActiveModel::Serializer::ErrorSerializer

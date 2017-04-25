@@ -219,6 +219,25 @@ module Wojxorfgax
         end.to raise_exception ActiveRecord::RecordNotFound
       end
 
+      it 'sets finished when played and not provided' do
+        attrs = {
+          data: {
+            type: 'wojxorfgax-item',
+            attributes: {
+              status: :played
+            }
+          }
+        }
+
+        patch "/items/#{item.id}", params: attrs, headers: { 'Authorization' => 'authorized_user' }
+        expect(response).to have_http_status(204)
+
+        item.reload
+
+        expect(item.played?).to eq true
+        expect(item.finished).to_not be_nil
+      end
+
       it 'does not allow changing the audio_identifier' do
         attrs = {
           data: {

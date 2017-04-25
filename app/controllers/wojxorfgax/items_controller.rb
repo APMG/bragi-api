@@ -22,6 +22,8 @@ module Wojxorfgax
       if params.dig(:filter, :status)
         items = items.where(status: params.dig(:filter, :status))
       end
+      # Special syntax to get the nulls last
+      items = items.order('-position DESC').order(finished: :asc)
       render json: items, meta: pagination_dict(items)
     end
 

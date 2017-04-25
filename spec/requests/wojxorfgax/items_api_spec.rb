@@ -91,6 +91,31 @@ module Wojxorfgax
         end
       end
 
+      context 'with a mixed set of played and unplayed' do
+        let!(:item1) { create :wojxorfgax_item, user: user, position: 3 }
+        let!(:item2) { create :wojxorfgax_played_item, user: user, finished: '2017-01-01T00:04:00Z' }
+        let!(:item3) { create :wojxorfgax_played_item, user: user, finished: '2017-01-01T00:03:00Z' }
+        let!(:item4) { create :wojxorfgax_played_item, user: user, finished: '2017-01-01T00:00:00Z' }
+        let!(:item5) { create :wojxorfgax_item, user: user, position: 2 }
+        let!(:item6) { create :wojxorfgax_item, user: user, position: 1 }
+        let!(:item7) { create :wojxorfgax_item, user: user, position: 4 }
+
+        it 'returns unplayed by position followed by played by finished time' do
+          get '/items', headers: { 'Authorization' => 'authorized_user' }
+          expect(response).to have_http_status(200)
+
+          json = JSON.parse response.body
+          expect(json['data'].size).to eq 7
+          expect(json['data'][0]['id']).to eq item6.id.to_s
+          expect(json['data'][1]['id']).to eq item5.id.to_s
+          expect(json['data'][2]['id']).to eq item1.id.to_s
+          expect(json['data'][3]['id']).to eq item7.id.to_s
+          expect(json['data'][4]['id']).to eq item4.id.to_s
+          expect(json['data'][5]['id']).to eq item3.id.to_s
+          expect(json['data'][6]['id']).to eq item2.id.to_s
+        end
+      end
+
       context 'with more than 200 items' do
         let!(:items) { create_list :wojxorfgax_item, 110, user: user }
         it 'limits defined page size' do

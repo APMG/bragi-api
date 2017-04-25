@@ -172,7 +172,7 @@ module Wojxorfgax
           if @item.position.nil?
             last_item = Wojxorfgax::Item.sorted(@item.wojxorfgax_user_id).last
             if last_item
-              Wojxorfgax::Item.sorted(@item.wojxorfgax_user_id).last.position + PositionTracker::POSITION_STEP
+              last_item.position + PositionTracker::POSITION_STEP
             else
               PositionTracker::FIRST_ITEM_POSITION
             end

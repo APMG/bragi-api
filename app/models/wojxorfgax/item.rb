@@ -39,12 +39,19 @@ module Wojxorfgax
     validates :source, presence: true
     validates :playtime, presence: true
 
-    scope :sorted, ->(user_id) { where(wojxorfgax_user_id: user_id, status: %i[unplayed playing]).order(position: :asc) }
+    scope(:sorted, ->(user_id) { where(wojxorfgax_user_id: user_id, status: %i[unplayed playing]).order(position: :asc) })
 
     before_save :set_position_after
 
     delegate :after, to: :position_tracker
     delegate :after=, to: :position_tracker
+
+    def self.resort(user_id)
+      sorted(user_id).each_with_index do |item, idx|
+        item.position = idx * PositionTracker::POSITION_STEP
+        item.save
+      end
+    end
 
     private
 
@@ -57,14 +64,7 @@ module Wojxorfgax
                         nil
                       else
                         position_tracker.position
-      end
-    end
-
-    def self.resort(user_id)
-      sorted(user_id).each_with_index do |item, idx|
-        item.position = idx * PositionTracker::POSITION_STEP
-        item.save
-      end
+                      end
     end
 
     class AfterItemUnpersistedError < StandardError; end

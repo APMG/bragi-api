@@ -20,9 +20,8 @@ module Wojxorfgax
       update_params.delete :audio_identifier
       item.attributes = update_params
 
-      unless item.save
-        render json: item, status: :bad_request, serializer: ActiveModel::Serializer::ErrorSerializer
-      end
+      return if item.save
+      render json: item, status: :bad_request, serializer: ActiveModel::Serializer::ErrorSerializer
     end
 
     def create

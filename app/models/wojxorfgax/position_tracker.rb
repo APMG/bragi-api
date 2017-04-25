@@ -17,7 +17,7 @@ module Wojxorfgax
                             FirstTracker.new(@item)
                           else
                             AfterTracker.new(@item, other_item)
-      end
+                          end
     end
 
     def after

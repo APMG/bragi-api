@@ -21,15 +21,15 @@ module Wojxorfgax
         if next_item
           end_position = next_item.position
           if end_position - start_position > 1
-            return start_position + (end_position - start_position) / 2
+            start_position + (end_position - start_position) / 2
           else
             # REFACTOR: This next line makes this query potentially have a
             # side-affect. That breaks CQS.
             Wojxorfgax::Item.resort(@item.wojxorfgax_user_id)
-            return position # Recursive
+            position # Recursive
           end
         else
-          return start_position + PositionTracker::POSITION_STEP
+          start_position + PositionTracker::POSITION_STEP
         end
       end
     end

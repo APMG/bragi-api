@@ -104,10 +104,10 @@ module Wojxorfgax
       end
 
       it 'inserts at the beginning with other record' do
-        other_item = create :wojxorfgax_item, status: :unplayed, user: user, position: 0
+        create :wojxorfgax_item, status: :unplayed, user: user, position: 0
         item.after = nil
         item.save!
-        expect(item.position).to eq -10
+        expect(item.position).to eq(-10)
       end
 
       it 'inserts at the end' do
@@ -119,7 +119,7 @@ module Wojxorfgax
 
       it 'inserts in the middle with space' do
         item1 = create :wojxorfgax_item, status: :unplayed, user: user, position: 0
-        item2 = create :wojxorfgax_item, status: :unplayed, user: user, position: 10
+        create :wojxorfgax_item, status: :unplayed, user: user, position: 10
         item.after = item1
         item.save!
         expect(item.position).to eq 5

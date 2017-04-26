@@ -14,6 +14,7 @@ AllCops:
     - 'db/migrate/*'
     # Blobs
     - 'spec/fixtures/**/*'
+    - 'vendor/**/*'
 # Line length is something that isn't dogmatic. 80 chars is a good recommendation.
 Metrics/LineLength:
   Enabled: false

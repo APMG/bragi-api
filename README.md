@@ -1,5 +1,7 @@
 # Bragi
 
+[![Build Status](https://travis-ci.org/APMG/bragi-api.svg?branch=master)](https://travis-ci.org/APMG/bragi-api)
+
 This is the backend API for APM's cross-site user audio playlist feature. It is designed as a Rails engine for easier integration into other sites.
 
 ## Usage

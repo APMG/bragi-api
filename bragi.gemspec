@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.version     = Bragi::VERSION
   s.authors     = ['William Johnston']
   s.email       = ['wjohnston@mpr.org']
-  s.homepage    = 'https://gitlab.mpr.org/ruby-libraries/bragi'
+  s.homepage    = 'https://github.com/APMG/bragi-api'
   s.summary     = 'API Backend for user audio queue/playlist'
   # s.description = "TODO: Description of Bragi."
   s.license     = 'MIT'

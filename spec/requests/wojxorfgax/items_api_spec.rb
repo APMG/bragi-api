@@ -116,7 +116,7 @@ module Wojxorfgax
         end
       end
 
-      context 'with more than 200 items' do
+      context 'with more than 100 items' do
         let!(:items) { create_list :wojxorfgax_item, 110, user: user }
         it 'limits defined page size' do
           get '/items', params: { page: { number: 1, size: 1000 } }, headers: { 'Authorization' => 'authorized_user' }

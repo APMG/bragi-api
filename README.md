@@ -138,6 +138,13 @@ Rails.application.routes.draw do
 end
 ```
 
+Run the following to copy the migrations for this engine to your project:
+
+```bash
+bin/rake bragi:install:migrations
+bin/rake db:migrate
+```
+
 ### Authentication
 
 In order to implement authentication, create an authentication class, and inject it in an initializer:

@@ -1,0 +1,9 @@
+services:
+  - mysql
+before_script:
+  - mysql -e 'CREATE DATABASE bragi_test;'
+  - cp spec/dummy/config/database.ci.yml spec/dummy/config/database.yml
+  - bin/rake db:setup
+language: ruby
+rvm:
+  - 2.3.1

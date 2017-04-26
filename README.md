@@ -1,4 +1,4 @@
-# Wojxorfgax
+# Bragi
 
 This is the backend API for APM's cross-site user audio playlist feature. It is designed as a Rails engine for easier integration into other sites.
 
@@ -30,7 +30,7 @@ The method of authentication is defined by the authorization class as described 
             "status": "unplayed"
         },
         "id": "27932",
-        "type": "wojxorfgax-items"
+        "type": "bragi-items"
     }
 }
 ```
@@ -112,7 +112,7 @@ Response will be a 204 status code if successful.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'wojxorfgax'
+gem 'bragi'
 ```
 
 And then execute:
@@ -124,7 +124,7 @@ bundle exec
 Or install it yourself as:
 
 ```bash
-gem install wojxorfgax
+gem install bragi
 ```
 
 After installing, mount the engine at the root of your app.
@@ -134,7 +134,7 @@ After installing, mount the engine at the root of your app.
 `config/routes.rb`
 ```ruby
 Rails.application.routes.draw do
-  mount Wojxorfgax::Engine => '/'
+  mount Bragi::Engine => '/'
 end
 ```
 
@@ -142,7 +142,7 @@ end
 
 In order to implement authentication, create an authentication class, and inject it in an initializer:
 
-`config/initializers/wojxorfgax.rb`
+`config/initializers/bragi.rb`
 ```ruby
 # frozen_string_literal: true
 
@@ -153,7 +153,7 @@ class StaticAuthPlugin
   end
 end
 
-Wojxorfgax.config do |c|
+Bragi.config do |c|
   c.auth_plugin = StaticAuthPlugin.new
 end
 ```
@@ -167,19 +167,3 @@ Pull requests welcome! If you are looking at doing any major work, you might wan
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
-## What the heck is up with that name?
-
-For this project, no simple name would do (read: we weren't feeling creative), so we turned to our sophisticated name generation system:
-
-```bash
-openssl rand -base64 28
-```
-
-In a singular event of significant universal significance (aka, every time a random number generator runs), it spat out a sequence of letters, numbers, and symbols. The numbers and symbols were useless, so they were removed. The string was lopped to a reasonable length, only the first character was capitalized, and out came… `Wojxorfgax`. Which was wonderful, because the vowel to consonant ratio was vaguely pronounceable.
-
-But what does this mean? There are a number of key elements of the name, we can go through. First of all, I immediately notice the XOR. This is a boolean operator of incredible significance and the basis of all arithmetic adders. However, also using that sequence of characters is the string "orf", which is of course a coded reference to Carl Orff, the composer of Carmina Burana, among other works. This is highly appropriate given APM's work in the arts, as well as Carmina Burana's emphasis on the wheel of fortune which itself spawned this application's name. At the end of the name are the letters "fax" (with a g randomly in the middle), which reminds one of "Shadowfax", the steed of Gandalf and the greatest of the horses of the Rohirrim. Finally, the letters "W" and "j" in such close proximity at the beginning are vaguely scandinavian, resulting in:
-
-![Wojxorfgax: The Norse god of User Custom Audio Playlists](wojxorfgax.jpg)
-
-The name was also going to be easy to run Find/Replace against for when we picked a real name. That didn't happen…

@@ -2,8 +2,8 @@
 
 require 'rails_helper'
 
-RSpec.describe Wojxorfgax::UserSerializer do
-  let(:item) { build :wojxorfgax_item, audio_identifier: '2014/01/01/blah' }
+RSpec.describe Bragi::UserSerializer do
+  let(:item) { build :bragi_item, audio_identifier: '2014/01/01/blah' }
   let(:serialization) { ActiveModelSerializers::SerializableResource.new(item).serializable_hash }
 
   it 'has three top level keys' do

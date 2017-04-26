@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Wojxorfgax
+module Bragi
   module ItemsControllerActions
     class CreateAction
       def initialize(context)

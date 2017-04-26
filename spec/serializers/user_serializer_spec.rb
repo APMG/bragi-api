@@ -2,8 +2,8 @@
 
 require 'rails_helper'
 
-RSpec.describe Wojxorfgax::UserSerializer do
-  let(:user) { build :wojxorfgax_user, external_uid: '123456' }
+RSpec.describe Bragi::UserSerializer do
+  let(:user) { build :bragi_user, external_uid: '123456' }
   let(:serialization) { ActiveModelSerializers::SerializableResource.new(user).serializable_hash }
 
   it 'has three top level keys' do

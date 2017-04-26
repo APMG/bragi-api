@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wojxorfgax (0.1.0)
+    bragi (0.1.0)
       active_model_serializers (~> 0.10.0)
       kaminari-activerecord (~> 1.0)
       rails (~> 5.0.2)
@@ -183,6 +183,7 @@ PLATFORMS
 
 DEPENDENCIES
   annotate
+  bragi!
   brakeman
   bundler-audit
   byebug
@@ -193,7 +194,6 @@ DEPENDENCIES
   pry-doc
   rspec-rails
   rubocop
-  wojxorfgax!
 
 BUNDLED WITH
    1.14.5

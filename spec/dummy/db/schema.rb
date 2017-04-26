@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 20170421213103) do
 
-  create_table "wojxorfgax_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "bragi_items", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "audio_identifier",                 null: false
     t.string   "audio_url",                        null: false
     t.string   "audio_title",                      null: false
@@ -24,20 +24,20 @@ ActiveRecord::Schema.define(version: 20170421213103) do
     t.integer  "playtime",                         null: false
     t.integer  "status",                           null: false
     t.datetime "finished"
-    t.integer  "wojxorfgax_user_id",               null: false
+    t.integer  "bragi_user_id",               null: false
     t.datetime "created_at",                       null: false
     t.datetime "updated_at",                       null: false
     t.integer  "position"
-    t.index ["wojxorfgax_user_id", "audio_identifier"], name: "index_wojxorfgax_items_on_user_id_and_audio_identifier", unique: true, using: :btree
-    t.index ["wojxorfgax_user_id"], name: "index_wojxorfgax_items_on_wojxorfgax_user_id", using: :btree
+    t.index ["bragi_user_id", "audio_identifier"], name: "index_bragi_items_on_user_id_and_audio_identifier", unique: true, using: :btree
+    t.index ["bragi_user_id"], name: "index_bragi_items_on_bragi_user_id", using: :btree
   end
 
-  create_table "wojxorfgax_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "bragi_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "external_uid", null: false
     t.string   "secret_uid"
     t.datetime "created_at",   null: false
     t.datetime "updated_at",   null: false
   end
 
-  add_foreign_key "wojxorfgax_items", "wojxorfgax_users"
+  add_foreign_key "bragi_items", "bragi_users"
 end

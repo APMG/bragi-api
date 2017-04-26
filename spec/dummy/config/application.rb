@@ -13,7 +13,7 @@ require 'rails/test_unit/railtie'
 # require "sprockets/railtie"
 
 Bundler.require(*Rails.groups)
-require 'wojxorfgax'
+require 'bragi'
 
 module Dummy
   class Application < Rails::Application

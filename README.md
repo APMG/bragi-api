@@ -41,6 +41,8 @@ The method of authentication is defined by the authorization class as described 
 
 The ID of another item with a status of `unplayed` or `playing` and which is also owned by the user. Similar to a linked list.
 
+If you want an item to be the first, explicitly pass `null` as the value.
+
 ##### `audio-url`
 
 The URL to the audio. The API doesn't actually care about the format, but the consuming application will need to be able to handle it.

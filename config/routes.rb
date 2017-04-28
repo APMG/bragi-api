@@ -2,5 +2,7 @@
 
 Bragi::Engine.routes.draw do
   resource :user, only: %i[show]
-  resources :items
+  resources :items do
+    get :podcast
+  end
 end

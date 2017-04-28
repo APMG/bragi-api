@@ -14,16 +14,18 @@ module Bragi
 
     describe 'GET #show' do
       context 'with existing user' do
-        let!(:user) { create :bragi_user, external_uid: '12345' }
+        let!(:user) { create :bragi_user, external_uid: '12345', secret_uid: 'blah1234' }
 
         it 'returns http success' do
           get '/user', headers: { 'Authorization' => 'authorized_user' }
           expect(response).to have_http_status(200)
 
           json = JSON.parse response.body
-          expect(json['data'][0]['id']).to eq '12345'
-          expect(json['data'][0].keys).to eq %w[id type attributes]
-          expect(json['data'][0]['type']).to eq 'bragi-users'
+          expect(json['data']['id']).to eq '12345'
+          expect(json['data'].keys).to eq %w[id type attributes]
+          expect(json['data']['type']).to eq 'bragi-users'
+          expect(json['data']['attributes'].keys).to eq %w[podcast-url]
+          expect(json['data']['attributes']['podcast-url']).to eq 'http://www.example.com/items/blah1234/podcast.xml'
         end
       end
 
@@ -33,9 +35,9 @@ module Bragi
           expect(response).to have_http_status(200)
 
           json = JSON.parse response.body
-          expect(json['data'][0]['id']).to eq '12345'
-          expect(json['data'][0].keys).to eq %w[id type attributes]
-          expect(json['data'][0]['type']).to eq 'bragi-users'
+          expect(json['data']['id']).to eq '12345'
+          expect(json['data'].keys).to eq %w[id type attributes]
+          expect(json['data']['type']).to eq 'bragi-users'
         end
       end
 

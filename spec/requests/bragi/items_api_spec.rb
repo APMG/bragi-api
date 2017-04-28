@@ -12,7 +12,7 @@ module Bragi
       end
     end
 
-    let!(:user) { create :bragi_user, external_uid: '12345' }
+    let!(:user) { create :bragi_user, external_uid: '12345', secret_uid: 'ajhsdfghj' }
 
     describe 'GET #index' do
       it 'returns correct json api headers' do
@@ -416,6 +416,26 @@ module Bragi
           expect do
             delete "/items/#{item.id}", headers: { 'Authorization' => 'unauthorized_user' }
           end.to raise_exception Bragi::ApplicationController::InvalidAuth
+        end
+      end
+    end
+
+    describe 'GET #podcast' do
+      let!(:items) { create_list :bragi_item, 10, user: user }
+
+      context 'with secret uid' do
+        it 'returns podcast' do
+          get '/items/ajhsdfghj/podcast.xml'
+          expect(response).to have_http_status(200)
+          # puts response.body
+        end
+      end
+
+      context 'with invalid id' do
+        it 'returns 404' do
+          expect do
+            get '/items/noid/podcast.xml'
+          end.to raise_exception ActiveRecord::RecordNotFound
         end
       end
     end

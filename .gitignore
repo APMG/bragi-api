@@ -11,3 +11,6 @@ spec/dummy/tmp/
 
 # No Credentials
 /spec/dummy/config/database.yml
+
+# Do not define gem versions
+/Gemfile.lock

@@ -2,9 +2,10 @@
 
 require 'rails_helper'
 
-RSpec.describe Bragi::UserSerializer do
-  let(:item) { build :bragi_item, audio_identifier: '2014/01/01/blah' }
-  let(:serialization) { ActiveModelSerializers::SerializableResource.new(item).serializable_hash }
+RSpec.describe Bragi::ItemSerializer do
+  let(:item) { build :bragi_item, audio_identifier: '2014/01/01/blah', id: 'test' }
+  let(:serializer) { Bragi::ItemSerializer.new(item) }
+  let(:serialization) { ActiveModelSerializers::Adapter.create(serializer).as_json }
 
   it 'has three top level keys' do
     expect(serialization[:data].keys).to eq %i[id type attributes]

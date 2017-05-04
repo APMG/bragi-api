@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'active_model_serializers'
+require 'rack/cors'
 
 module Bragi
   class Engine < ::Rails::Engine
@@ -22,5 +23,13 @@ module Bragi
       application/json
     ]
     Mime::Type.register 'application/vnd.api+json', :json, api_mime_types
+
+    # CORS Headers
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*'
+        resource '*', headers: :any, methods: [:get, :post, :patch, :delete, :options, :put]
+      end
+    end
   end
 end

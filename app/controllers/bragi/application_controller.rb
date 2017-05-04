@@ -8,6 +8,10 @@ module Bragi
 
     attr_reader :current_user
 
+    def handle_options_request
+      head(:ok)
+    end
+
     private
 
     def authenticate_user

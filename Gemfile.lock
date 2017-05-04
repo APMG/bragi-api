@@ -4,6 +4,7 @@ PATH
     bragi (0.1.0)
       active_model_serializers (~> 0.10.0)
       kaminari-activerecord (~> 1.0)
+      rack-cors (~> 0.4.1)
       rails (~> 5.0.2)
 
 GEM
@@ -32,7 +33,7 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
-    active_model_serializers (0.10.5)
+    active_model_serializers (0.10.6)
       actionpack (>= 4.1, < 6)
       activemodel (>= 4.1, < 6)
       case_transform (>= 0.2)
@@ -83,7 +84,7 @@ GEM
     kaminari-core (1.0.1)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
-    mail (2.6.4)
+    mail (2.6.5)
       mime-types (>= 1.16, < 4)
     method_source (0.8.2)
     mime-types (3.1)
@@ -109,6 +110,7 @@ GEM
       pry (~> 0.9)
       yard (~> 0.9)
     rack (2.0.1)
+    rack-cors (0.4.1)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (5.0.2)

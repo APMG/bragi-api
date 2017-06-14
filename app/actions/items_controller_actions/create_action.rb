@@ -14,6 +14,7 @@ module Bragi
         item.user = @context.current_user
 
         if item.save
+          ItemChangeListener.new.call(:create, item)
           @context.render json: item
         else
           @context.render json: item, status: :bad_request, serializer: ActiveModel::Serializer::ErrorSerializer

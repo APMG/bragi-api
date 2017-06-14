@@ -30,6 +30,7 @@ module Bragi
     def destroy
       item = Item.find_by! id: params[:id], user: current_user
       item.destroy
+      ItemChangeListener.new.call(:destroy, item)
     end
 
     def podcast

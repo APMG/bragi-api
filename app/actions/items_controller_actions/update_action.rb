@@ -17,6 +17,7 @@ module Bragi
         end
 
         return if item.save
+        ItemChangeListener.new.call(:update, item)
         @context.render json: item, status: :bad_request, serializer: ActiveModel::Serializer::ErrorSerializer
       end
 

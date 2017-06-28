@@ -21,10 +21,10 @@ RSpec.describe Bragi::UserSerializer do
   end
 
   it 'has only the podcast-url as the attribute' do
-    expect(serialization[:data][:attributes].keys).to eq %i[podcast-url]
+    expect(serialization[:data][:attributes].keys).to eq %i[podcast_url]
   end
 
   it 'has a reasonable value for the podcast-url' do
-    expect(serialization[:data][:attributes][:'podcast-url']).to eq 'http://www.example.com/items/blah123/podcast.xml'
+    expect(serialization[:data][:attributes][:podcast_url]).to eq 'http://www.example.com/items/blah123/podcast.xml'
   end
 end

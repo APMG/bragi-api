@@ -15,6 +15,7 @@ module Bragi
     config.action_dispatch.rescue_responses['Bragi::ApplicationController::InvalidAuth'] = :forbidden
 
     ActiveModelSerializers.config.adapter = :json_api
+    ActiveModelSerializers.config.key_transform = :underscore
 
     api_mime_types = %w[
       application/vnd.api+json

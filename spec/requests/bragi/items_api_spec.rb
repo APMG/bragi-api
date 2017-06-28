@@ -41,7 +41,7 @@ module Bragi
 
           first_item = json['data'].first
           expect(first_item.keys).to eq %w[id type attributes]
-          expect(first_item['type']).to eq 'bragi-items'
+          expect(first_item['type']).to eq 'bragi_items'
         end
       end
 
@@ -65,9 +65,9 @@ module Bragi
           expect(json['links'].keys).to include 'self'
           expect(json['links'].keys).to include 'prev'
           expect(json['links'].keys).to include 'first'
-          expect(json['meta']['current-page']).to eq 2
-          expect(json['meta']['total-pages']).to eq 2
-          expect(json['meta']['total-count']).to eq 61
+          expect(json['meta']['current_page']).to eq 2
+          expect(json['meta']['total_pages']).to eq 2
+          expect(json['meta']['total_count']).to eq 61
         end
 
         it 'shows next and last links on page 1' do
@@ -79,7 +79,7 @@ module Bragi
           expect(json['links'].keys).to include 'self'
           expect(json['links'].keys).to include 'next'
           expect(json['links'].keys).to include 'last'
-          expect(json['meta']['current-page']).to eq 1
+          expect(json['meta']['current_page']).to eq 1
         end
 
         it 'allows defined page size' do
@@ -197,7 +197,7 @@ module Bragi
           json = JSON.parse response.body
           expect(json['data'].keys).to eq %w[id type attributes]
           expect(json['data']['id']).to eq item.id.to_s
-          expect(json['data']['type']).to eq 'bragi-items'
+          expect(json['data']['type']).to eq 'bragi_items'
         end
       end
 
@@ -287,7 +287,7 @@ module Bragi
         expect(response).to have_http_status(400)
 
         json = JSON.parse(response.body)
-        expect(json['errors'][0]['source']['pointer']).to eq '/data/attributes/audio-title'
+        expect(json['errors'][0]['source']['pointer']).to eq '/data/attributes/audio_title'
         expect(json['errors'][0]['detail']).to eq "can't be blank"
       end
 
@@ -359,7 +359,7 @@ module Bragi
         expect(Item.count).to eq 0
 
         json = JSON.parse(response.body)
-        expect(json['errors'][0]['source']['pointer']).to eq '/data/attributes/audio-identifier'
+        expect(json['errors'][0]['source']['pointer']).to eq '/data/attributes/audio_identifier'
         expect(json['errors'][0]['detail']).to eq "can't be blank"
       end
 

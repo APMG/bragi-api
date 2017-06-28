@@ -23,9 +23,9 @@ module Bragi
           json = JSON.parse response.body
           expect(json['data']['id']).to eq '12345'
           expect(json['data'].keys).to eq %w[id type attributes]
-          expect(json['data']['type']).to eq 'bragi-users'
-          expect(json['data']['attributes'].keys).to eq %w[podcast-url]
-          expect(json['data']['attributes']['podcast-url']).to eq 'http://www.example.com/items/blah1234/podcast.xml'
+          expect(json['data']['type']).to eq 'bragi_users'
+          expect(json['data']['attributes'].keys).to eq %w[podcast_url]
+          expect(json['data']['attributes']['podcast_url']).to eq 'http://www.example.com/items/blah1234/podcast.xml'
         end
       end
 
@@ -37,7 +37,7 @@ module Bragi
           json = JSON.parse response.body
           expect(json['data']['id']).to eq '12345'
           expect(json['data'].keys).to eq %w[id type attributes]
-          expect(json['data']['type']).to eq 'bragi-users'
+          expect(json['data']['type']).to eq 'bragi_users'
         end
       end
 

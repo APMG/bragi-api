@@ -12,6 +12,6 @@ RSpec.describe Bragi::ItemSerializer do
   end
 
   it 'has an assumed set of attributes' do
-    expect(serialization[:data][:attributes].keys).to eq %i[after audio-url audio-identifier audio-title audio-description audio-hosts audio-program origin-url source playtime status finished]
+    expect(serialization[:data][:attributes].keys).to eq %i[after audio_url audio_identifier audio_title audio_description audio_hosts audio_program origin_url source playtime status finished]
   end
 end

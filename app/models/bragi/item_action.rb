@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Bragi
   class ItemAction
     attr_reader :action, :item
@@ -11,7 +13,7 @@ module Bragi
       serializer = Bragi::ItemSerializer.new(item)
       {
         action: action,
-        data: ActiveModelSerializers::Adapter.create(serializer).as_json[:data],
+        data: ActiveModelSerializers::Adapter.create(serializer).as_json[:data]
       }
     end
   end

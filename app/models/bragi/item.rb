@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: bragi_items
@@ -52,7 +53,7 @@ module Bragi
       end
     end
 
-    def after_id
+    def after_id # rubocop:disable Rails/Delegate
       after&.id
     end
 

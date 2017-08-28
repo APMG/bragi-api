@@ -369,7 +369,7 @@ module Bragi
         attrs = {
           data: {
             type: 'bragi-item',
-            attributes: item_attributes.merge({after_id: item.id})
+            attributes: item_attributes.merge(after_id: item.id)
           }
         }
 

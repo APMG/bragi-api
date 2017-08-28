@@ -1,25 +1,24 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: bragi_items
 #
-#  id                 :integer          not null, primary key
-#  sort               :float(24)
-#  audio_identifier   :string(255)      not null
-#  audio_url          :string(255)      not null
-#  audio_title        :string(255)      not null
-#  audio_description  :text(65535)
-#  audio_hosts        :text(65535)
-#  audio_program      :string(255)
-#  origin_url         :string(255)
-#  source             :string(255)      not null
-#  playtime           :integer          not null
-#  status             :integer          not null
-#  finished           :datetime
-#  bragi_user_id :integer          not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
+#  id                :integer          not null, primary key
+#  audio_identifier  :string(255)      not null
+#  audio_url         :string(255)      not null
+#  audio_title       :string(255)      not null
+#  audio_description :text(65535)
+#  audio_hosts       :text(65535)
+#  audio_program     :string(255)
+#  origin_url        :string(255)
+#  source            :string(255)      not null
+#  playtime          :integer          not null
+#  status            :integer          not null
+#  finished          :datetime
+#  bragi_user_id     :integer          not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  position          :integer
 #
 
 module Bragi
@@ -51,6 +50,14 @@ module Bragi
         item.position = idx * PositionTracker::POSITION_STEP
         item.save
       end
+    end
+
+    def after_id
+      after&.id
+    end
+
+    def after_id=(other_id)
+      self.after = other_id.nil? ? nil : self.class.find(other_id)
     end
 
     private

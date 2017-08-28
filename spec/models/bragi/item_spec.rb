@@ -1,25 +1,24 @@
 # frozen_string_literal: true
-
 # == Schema Information
 #
 # Table name: bragi_items
 #
-#  id                 :integer          not null, primary key
-#  sort               :float(24)
-#  audio_identifier   :string(255)      not null
-#  audio_url          :string(255)      not null
-#  audio_title        :string(255)      not null
-#  audio_description  :text(65535)
-#  audio_hosts        :text(65535)
-#  audio_program      :string(255)
-#  origin_url         :string(255)
-#  source             :string(255)      not null
-#  playtime           :integer          not null
-#  status             :integer          not null
-#  finished           :datetime
-#  bragi_user_id :integer          not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
+#  id                :integer          not null, primary key
+#  audio_identifier  :string(255)      not null
+#  audio_url         :string(255)      not null
+#  audio_title       :string(255)      not null
+#  audio_description :text(65535)
+#  audio_hosts       :text(65535)
+#  audio_program     :string(255)
+#  origin_url        :string(255)
+#  source            :string(255)      not null
+#  playtime          :integer          not null
+#  status            :integer          not null
+#  finished          :datetime
+#  bragi_user_id     :integer          not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  position          :integer
 #
 
 require 'rails_helper'
@@ -92,6 +91,28 @@ module Bragi
 
         it 'is always null' do
           expect(subject).to be_nil
+        end
+      end
+    end
+
+    describe '#after_id' do
+      let(:position) { 1 }
+      let(:finished) { nil }
+      let(:item) { create :bragi_item, status: status, user: user, position: position, finished: finished }
+
+      subject { item.after_id }
+
+      context 'with one item' do
+        it { is_expected.to be_nil }
+      end
+
+      context 'with an item before' do
+        let(:position) { 2 }
+        let!(:before_item) { create :bragi_item, status: :unplayed, user: user, position: 1 }
+        let!(:before_item1) { create :bragi_item, status: :unplayed, user: user, position: 0 }
+
+        it 'lists that item as the thing it is after' do
+          expect(subject).to eq before_item.id
         end
       end
     end
@@ -206,6 +227,21 @@ module Bragi
         item.save!
         item1 = create :bragi_item, user: user, status: :unplayed, position: nil
         expect(item1.position).to eq 11
+      end
+    end
+
+    describe '#after=' do
+      it 'inserts at the beginning with no other record' do
+        item.after_id = nil
+        item.save!
+        expect(item.position).to eq 0
+      end
+
+      it 'inserts at the end' do
+        other_item = create :bragi_item, status: :unplayed, user: user, position: 0
+        item.after_id = other_item.id
+        item.save!
+        expect(item.position).to eq 10
       end
     end
 

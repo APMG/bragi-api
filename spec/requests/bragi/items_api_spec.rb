@@ -363,6 +363,25 @@ module Bragi
         expect(json['errors'][0]['detail']).to eq "can't be blank"
       end
 
+      it 'POSTs new after existing' do
+        item = create :bragi_item, user: user
+
+        attrs = {
+          data: {
+            type: 'bragi-item',
+            attributes: item_attributes.merge({after_id: item.id})
+          }
+        }
+
+        post '/items', params: attrs, headers: { 'Authorization' => 'authorized_user' }
+        expect(response).to have_http_status(200)
+
+        expect(Item.count).to eq 2
+        new_db_item = Item.last
+
+        expect(new_db_item.position).to be > item.position
+      end
+
       # it 'POSTs existing with older play_start_time' do
       #   preexisting_item = create :bragi_item, audio_identifier: 'blah1234', user: user, playtime: 1234
 

@@ -274,6 +274,31 @@ module Bragi
         expect(item.playtime).to eq 123_456
       end
 
+      it 'resorts when placed after' do
+        second_item = create :bragi_item, user: user, after: item
+
+        expect(item.after).to be_nil
+        expect(second_item.after).to eq item
+
+        attrs = {
+          data: {
+            type: 'bragi-item',
+            attributes: {
+              after_id: second_item.id
+            }
+          }
+        }
+
+        patch "/items/#{item.id}", params: attrs, headers: { 'Authorization' => 'authorized_user' }
+        expect(response).to have_http_status(204)
+
+        item.reload
+        second_item.reload
+
+        expect(item.position).to be > second_item.position
+        expect(item.after).to eq second_item
+      end
+
       it 'updates existing with field errors' do
         attrs = {
           data: {

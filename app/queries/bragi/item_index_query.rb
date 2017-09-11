@@ -16,16 +16,21 @@ module Bragi
     end
 
     def query
-      items = @relation.page(page_number).per(page_size)
-      items = items.where(source: source_filter) if source_filter
-      items = items.where(status: status_filter) if status_filter
-      # Special MySQL syntax to get the nulls last
-      items = items.order('-position DESC').order(finished: :asc)
-
-      items
+      @relation.page(page_number).per(page_size)
+               .where(where_clause)
+               .order('-position DESC').order(finished: :asc) # Special MySQL syntax to get the nulls last
     end
 
     private
+
+    def where_clause
+      hsh = {}
+      hsh[:source] = source_filter if source_filter
+      hsh[:status] = status_filter if status_filter
+      hsh[:audio_identifier] = audio_identifier_filter if audio_identifier_filter
+
+      hsh
+    end
 
     def source_filter
       @params.dig(:filter, :source)
@@ -33,6 +38,10 @@ module Bragi
 
     def status_filter
       @params.dig(:filter, :status)
+    end
+
+    def audio_identifier_filter
+      @params.dig(:filter, :audio_identifier)
     end
 
     def page_size

@@ -29,6 +29,24 @@ module Bragi
         expect(json['data']).to eq []
       end
 
+      context 'with audio_identifier filter' do
+        let!(:items) { create_list :bragi_item, 10, user: user }
+        let!(:item) { create :bragi_item, user: user, audio_identifier: '2017/01/01/blah1' }
+
+        it 'returns the one item' do
+          get '/items', params: { filter: { audio_identifier: '2017/01/01/blah1' } }, headers: { 'Authorization' => 'authorized_user' }
+          expect(response).to have_http_status(200)
+
+          json = JSON.parse response.body
+          expect(json['data'].size).to eq 1
+
+          first_item = json['data'].first
+          expect(first_item.keys).to eq %w[id type attributes]
+          expect(first_item['type']).to eq 'bragi_items'
+          expect(first_item['attributes']['audio_identifier']).to eq '2017/01/01/blah1'
+        end
+      end
+
       context 'with multiple items' do
         let!(:items) { create_list :bragi_item, 10, user: user }
 

@@ -24,7 +24,7 @@ module Bragi
 
       def permitted_params
         @context.params.require(:data).permit(
-          :type, attributes: %i[after_id audio_url audio_title audio_description audio_hosts audio_program origin_url source playtime status finished]
+          :type, attributes: %i[after_id audio_url audio_title audio_description audio_hosts audio_program audio_publish_datetime audio_image_url origin_url source playtime status finished]
         )
       end
 

@@ -31,6 +31,8 @@ FactoryGirl.define do
     audio_description 'MyText'
     audio_hosts 'MyText'
     audio_program 'MyString'
+    audio_publish_datetime '2017-01-01T00:00:00Z'
+    audio_image_url 'https://example.com/test.jpg'
     origin_url 'MyString'
     source 'MyString'
     playtime 1

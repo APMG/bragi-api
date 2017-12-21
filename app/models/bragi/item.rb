@@ -53,7 +53,7 @@ module Bragi
       end
     end
 
-    def after_id # rubocop:disable Rails/Delegate
+    def after_id
       after&.id
     end
 

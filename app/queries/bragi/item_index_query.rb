@@ -18,6 +18,7 @@ module Bragi
     def query
       @relation.page(page_number).per(page_size)
                .where(where_clause)
+               .where(after_id_filter)
                .order('-position DESC').order(finished: :asc) # Special MySQL syntax to get the nulls last
     end
 
@@ -42,6 +43,13 @@ module Bragi
 
     def audio_identifier_filter
       @params.dig(:filter, :audio_identifier)
+    end
+
+    def after_id_filter
+      after_id = @params.dig(:filter, :after_id)
+      return nil unless after_id
+      starting_item = Item.find_by! id: after_id
+      "position > #{starting_item.position}"
     end
 
     def page_size

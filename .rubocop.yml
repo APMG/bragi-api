@@ -26,6 +26,10 @@ Rails/HasManyOrHasOneDependent:
   Enabled: false
 Rails/InverseOf:
   Enabled: false
+Rails/ActiveRecordAliases:
+  Enabled: false
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
 
 Metrics/BlockLength:
   Exclude:

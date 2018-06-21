@@ -132,7 +132,7 @@ module Bragi
         let!(:item2) { create :bragi_played_item, user: user, finished: '2017-01-01T00:04:00Z' }
         let!(:item3) { create :bragi_played_item, user: user, finished: '2017-01-01T00:03:00Z' }
         let!(:item4) { create :bragi_played_item, user: user, finished: '2017-01-01T00:00:00Z' }
-        let!(:item5) { create :bragi_item, user: user, position: 2 }
+        let!(:item5) { create :bragi_item, user: user, position: 2, status: 'playing' }
         let!(:item6) { create :bragi_item, user: user, position: 1 }
         let!(:item7) { create :bragi_item, user: user, position: 4 }
 
@@ -149,6 +149,35 @@ module Bragi
           expect(json['data'][4]['id']).to eq item4.id.to_s
           expect(json['data'][5]['id']).to eq item3.id.to_s
           expect(json['data'][6]['id']).to eq item2.id.to_s
+        end
+
+        it 'fetches by after_id' do
+          get '/items', params: { filter: { after_id: item6.id } }, headers: { 'Authorization' => 'authorized_user' }
+
+          expect(response).to have_http_status(200)
+          json = JSON.parse response.body
+          expect(json['data'].size).to eq 3
+          expect(json['data'][0]['id']).to eq item5.id.to_s
+          expect(json['data'][1]['id']).to eq item1.id.to_s
+          expect(json['data'][2]['id']).to eq item7.id.to_s
+        end
+
+        it 'fetches by after_id and status' do
+          get '/items', params: { filter: { after_id: item6.id, status: 'unplayed' } }, headers: { 'Authorization' => 'authorized_user' }
+
+          expect(response).to have_http_status(200)
+          json = JSON.parse response.body
+          expect(json['data'].size).to eq 2
+          expect(json['data'][0]['id']).to eq item1.id.to_s
+          expect(json['data'][1]['id']).to eq item7.id.to_s
+        end
+
+        it 'returns no items if after_id is last item' do
+          get '/items', params: { filter: { after_id: item7.id } }, headers: { 'Authorization' => 'authorized_user' }
+
+          expect(response).to have_http_status(200)
+          json = JSON.parse response.body
+          expect(json['data'].size).to eq 0
         end
       end
 

@@ -157,9 +157,9 @@ module Bragi
           expect(response).to have_http_status(200)
           json = JSON.parse response.body
           expect(json['data'].size).to eq 3
-          json['data'].each do |item|
-            expect(item['attributes']['status']).to be_in(%w[unplayed playing])
-          end
+          expect(json['data'][0]['id']).to eq item5.id.to_s
+          expect(json['data'][1]['id']).to eq item1.id.to_s
+          expect(json['data'][2]['id']).to eq item7.id.to_s
         end
 
         it 'fetches by after_id and status' do
@@ -168,9 +168,8 @@ module Bragi
           expect(response).to have_http_status(200)
           json = JSON.parse response.body
           expect(json['data'].size).to eq 2
-          json['data'].each do |item|
-            expect(item['attributes']['status']).to eq 'unplayed'
-          end
+          expect(json['data'][0]['id']).to eq item1.id.to_s
+          expect(json['data'][1]['id']).to eq item7.id.to_s
         end
 
         it 'returns no items if after_id is last item' do
